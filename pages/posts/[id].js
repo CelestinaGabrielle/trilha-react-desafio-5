@@ -1,43 +1,45 @@
 import { getGlobalData } from '../../utils/global-data';
 import { getPostBySlug } from '../../utils/mdx-utils';
-
-import { MDXRemote } from 'next-mdx-remote';
 import Head from 'next/head';
-import Link from 'next/link';
-import ArrowIcon from '../../components/ArrowIcon';
 import CustomLink from '../../components/CustomLink';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import Layout, { GradientBackground } from '../../components/Layout';
 import SEO from '../../components/SEO';
-import { api } from '../../services/api';
-import { postcss } from 'autoprefixer';
 
 const components = {
   a: CustomLink,
   Head,
 };
 
-export default function PostPage({ posts, globalData }) {
-  
+export default function PostPage({ post, globalData }) {
+  if (!post) {
+    console.error('Post não encontrado');
+    return <div>Post não encontrado</div>;
+  }
+
+  console.log('Post carregado:', post);
+
   return (
     <Layout>
       <SEO
-        title={`${posts.title} - ${globalData.name}`}
-        description={posts.description}
+        title={`${post.title} - ${globalData.name}`} // Usando `title` da tabela
+        description={post.description} // Usando `description` da tabela
       />
       <Header name={globalData.name} />
       <article className="px-6 md:px-0">
         <header>
           <h1 className="text-3xl md:text-5xl dark:text-white text-center mb-12">
-            {posts?.title}
+            {post.title} 
           </h1>
-          {posts?.description && (
-            <p className="text-xl mb-4">{posts?.description}</p>
+          {post.description && ( // Usando `description` da tabela
+            <p className="text-xl mb-4">{post.description}</p>
           )}
         </header>
         <main>
-          <article className="prose dark:prose-dark">{posts.body}</article>
+          <article className="prose dark:prose-dark">
+            {post.body} 
+          </article>
         </main>
       </article>
       <Footer copyrightText={globalData.footerText} />
@@ -54,14 +56,15 @@ export default function PostPage({ posts, globalData }) {
 }
 
 export const getServerSideProps = async ({ params }) => {
-  console.log('ID recebido no getServerSideProps:', params.id);
-  
+  console.log('ID recebido no getServerSideProps:', params.id); // Verifique se o ID está sendo recebido
   const globalData = getGlobalData();
   const post = await getPostBySlug(params.id);
 
+  console.log('Post retornado pelo getPostBySlug:', post);
+
   if (!post) {
     return {
-      notFound: true, 
+      notFound: true,
     };
   }
 
@@ -72,4 +75,3 @@ export const getServerSideProps = async ({ params }) => {
     },
   };
 };
-
