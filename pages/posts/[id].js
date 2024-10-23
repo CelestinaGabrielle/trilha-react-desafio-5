@@ -1,7 +1,5 @@
 import { getGlobalData } from '../../utils/global-data';
-import {
-  getPostBySlug,
-} from '../../utils/mdx-utils';
+import { getPostBySlug } from '../../utils/mdx-utils';
 
 import { MDXRemote } from 'next-mdx-remote';
 import Head from 'next/head';
@@ -12,17 +10,16 @@ import Footer from '../../components/Footer';
 import Header from '../../components/Header';
 import Layout, { GradientBackground } from '../../components/Layout';
 import SEO from '../../components/SEO';
-
+import { api } from '../../services/api';
+import { postcss } from 'autoprefixer';
 
 const components = {
   a: CustomLink,
   Head,
 };
 
-export default function PostPage({
-  posts,
-  globalData,
-}) {
+export default function PostPage({ posts, globalData }) {
+  
   return (
     <Layout>
       <SEO
@@ -40,9 +37,7 @@ export default function PostPage({
           )}
         </header>
         <main>
-          <article className="prose dark:prose-dark">
-            {posts.body}
-          </article>
+          <article className="prose dark:prose-dark">{posts.body}</article>
         </main>
       </article>
       <Footer copyrightText={globalData.footerText} />
@@ -59,14 +54,21 @@ export default function PostPage({
 }
 
 export const getServerSideProps = async ({ params }) => {
+  console.log('ID recebido no getServerSideProps:', params.id);
+  
   const globalData = getGlobalData();
-  const posts = await getPostBySlug(params.id);
- 
+  const post = await getPostBySlug(params.id);
+
+  if (!post) {
+    return {
+      notFound: true, 
+    };
+  }
 
   return {
     props: {
       globalData,
-      posts,
+      post,
     },
   };
 };
