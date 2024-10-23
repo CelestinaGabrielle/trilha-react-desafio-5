@@ -23,8 +23,8 @@ export default function PostPage({ post, globalData }) {
   return (
     <Layout>
       <SEO
-        title={`${post.title} - ${globalData.name}`} // Usando `title` da tabela
-        description={post.description} // Usando `description` da tabela
+        title={`${post.title} - ${globalData.name}`} 
+        description={post.description} 
       />
       <Header name={globalData.name} />
       <article className="px-6 md:px-0">
@@ -32,7 +32,7 @@ export default function PostPage({ post, globalData }) {
           <h1 className="text-3xl md:text-5xl dark:text-white text-center mb-12">
             {post.title} 
           </h1>
-          {post.description && ( // Usando `description` da tabela
+          {post.description && ( 
             <p className="text-xl mb-4">{post.description}</p>
           )}
         </header>
@@ -56,7 +56,7 @@ export default function PostPage({ post, globalData }) {
 }
 
 export const getServerSideProps = async ({ params }) => {
-  console.log('ID recebido no getServerSideProps:', params.id); // Verifique se o ID está sendo recebido
+  console.log('ID recebido no getServerSideProps:', params.id); 
   const globalData = getGlobalData();
   const post = await getPostBySlug(params.id);
 

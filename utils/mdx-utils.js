@@ -11,9 +11,9 @@ export const getPosts = async () => {
 export const getPostBySlug = async (id) => {
   try {
     const { data } = await api.get(`/posts?id=eq.${id}`);
-    console.log('Dados retornados pela API:', data); // Log para verificar a resposta da API
+    console.log('Dados retornados pela API:', data); 
     if (data && data.length > 0) {
-      return data[0]; // Retornar o primeiro objeto do array
+      return data[0]; 
     } else {
       console.log('Nenhum post encontrado');
       return null;
